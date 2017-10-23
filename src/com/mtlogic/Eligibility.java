@@ -43,9 +43,9 @@ public class Eligibility {
 	final Logger logger = LoggerFactory.getLogger(Eligibility.class);
 	
 	public static final int CLIENT_270 = 1;
-	public static final int MTLOGIC_270 = 2;
+	public static final int INTERNAL_270 = 2;
 	public static final int PAYOR_271 = 3;
-	public static final int MTLOGIC_271 = 4;
+	public static final int INTERNAL_271 = 4;
 	public static final String UTF8_BOM = "\uFEFF";
 	
 	@Path("/form/eligibility")
@@ -137,7 +137,7 @@ public class Eligibility {
 			try {
 				eligibilityService.replaceReceiverSender(eligibilityService.getEligibilityRequest(), EligibilityService.EMDEON, EligibilityService.THE_CONSULT);
 				eligibilityService.updateMessageWithInternalPayerCode(eligibilityService.getEligibilityRequest());
-				eligibilityService.postMessage(MTLOGIC_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
+				eligibilityService.postMessage(INTERNAL_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
 				Instant emdeonStart = Instant.now();
 				responseX12Message = eligibilityService.postInquiryToEmdeon(environmentCode, eligibilityService.getEligibilityRequest().toString());
 				Instant emdeonEnd = Instant.now();
@@ -148,7 +148,7 @@ public class Eligibility {
 				if (responseX12Message != null) {			
 					eligibilityService.postMessage(PAYOR_271, responseX12Message.toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
 					eligibilityService.replaceReceiverSender(responseX12Message, eligibilityService.getOriginalSubmitter(), EligibilityService.THE_CONSULT);
-					eligibilityService.postMessage(MTLOGIC_271, responseX12Message.toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
+					eligibilityService.postMessage(INTERNAL_271, responseX12Message.toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
 				} else {
 					logger.error("Could not parse response message!");
 					response = Response.status(HttpStatus.SC_UNPROCESSABLE_ENTITY).entity("Could not parse response message!").build();
@@ -180,7 +180,7 @@ public class Eligibility {
 			} 
 			if (response == null) {
 				try {
-					eligibilityService.postMessage(MTLOGIC_271, cachedResponse, clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
+					eligibilityService.postMessage(INTERNAL_271, cachedResponse, clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, firstName, lastName, isDependent);
 				} catch (Exception e) {
 					logger.error("Cached response message could not be persisted: " + e.getMessage());
 					e.printStackTrace();
@@ -318,7 +318,7 @@ public class Eligibility {
 				eligibilityService.postMessage(CLIENT_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, isDependent);
 				eligibilityService.replaceReceiverSender(eligibilityService.getEligibilityRequest(), EligibilityService.EMDEON, EligibilityService.THE_CONSULT);
 				eligibilityService.updateMessageWithInternalPayerCode(eligibilityService.getEligibilityRequest());
-				eligibilityService.postMessage(MTLOGIC_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, isDependent);
+				eligibilityService.postMessage(INTERNAL_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, isDependent);
 			}
 		} catch (InvalidX12MessageException ixme) {
 			logger.error("Could not parse incoming message! - " + ixme.getMessage());
@@ -342,7 +342,7 @@ public class Eligibility {
 				if (responseX12Message != null) {			
 					eligibilityService.postMessage(PAYOR_271, responseX12Message.toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, isDependent);
 					eligibilityService.replaceReceiverSender(responseX12Message, eligibilityService.getOriginalSubmitter(), EligibilityService.THE_CONSULT);
-					eligibilityService.postMessage(MTLOGIC_271, responseX12Message.toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, isDependent);
+					eligibilityService.postMessage(INTERNAL_271, responseX12Message.toString(), clientId, userName, npi, memberId, payerCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, isDependent);
 					//responseText = responseX12Message.toJSONString(Boolean.TRUE);
 					responseText = responseX12Message.toString();
 				} else {
@@ -438,7 +438,7 @@ public class Eligibility {
 				eligibilityService.postMessage(CLIENT_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 				eligibilityService.replaceReceiverSender(eligibilityService.getEligibilityRequest(), EligibilityService.EMDEON, EligibilityService.THE_CONSULT);
 				eligibilityService.updateMessageWithInternalPayerCode(eligibilityService.getEligibilityRequest());
-				eligibilityService.postMessage(MTLOGIC_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
+				eligibilityService.postMessage(INTERNAL_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 			}
 		} catch (InvalidX12MessageException ixme) {
 			logger.error("Could not parse incoming message! - " + ixme.getMessage());
@@ -462,7 +462,7 @@ public class Eligibility {
 				if (responseX12Message != null) {			
 					eligibilityService.postMessage(PAYOR_271, responseX12Message.toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 					eligibilityService.replaceReceiverSender(responseX12Message, eligibilityService.getOriginalSubmitter(), EligibilityService.THE_CONSULT);
-					eligibilityService.postMessage(MTLOGIC_271, responseX12Message.toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
+					eligibilityService.postMessage(INTERNAL_271, responseX12Message.toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 					if ("J".equals(responseEncoding)) {
 					    responseText = responseX12Message.toJSONString(Boolean.TRUE);
 					    System.out.println(responseText);
@@ -534,7 +534,7 @@ public class Eligibility {
 			eligibilityService.postMessage(CLIENT_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 			eligibilityService.replaceReceiverSender(eligibilityService.getEligibilityRequest(), EligibilityService.EMDEON, EligibilityService.THE_CONSULT);
 			eligibilityService.updateMessageWithInternalPayerCode(eligibilityService.getEligibilityRequest());
-			eligibilityService.postMessage(MTLOGIC_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
+			eligibilityService.postMessage(INTERNAL_270, eligibilityService.getEligibilityRequest().toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 		} catch (InvalidX12MessageException ixme) {
 			logger.error("Could not parse incoming message! - " + ixme.getMessage());
 			ixme.printStackTrace();
@@ -555,7 +555,7 @@ public class Eligibility {
 				if (responseX12Message != null) {			
 					eligibilityService.postMessage(PAYOR_271, responseX12Message.toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 					eligibilityService.replaceReceiverSender(responseX12Message, eligibilityService.getOriginalSubmitter(), EligibilityService.THE_CONSULT);
-					eligibilityService.postMessage(MTLOGIC_271, responseX12Message.toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
+					eligibilityService.postMessage(INTERNAL_271, responseX12Message.toString(), clientId, userName, npi, subscriberIdentifier, payorCode, dateOfService, dateOfBirth, serviceTypeCode, patientFirstName, patientLastName, dependentFlag);
 					//responseText = responseX12Message.toJSONString(Boolean.TRUE);
 					responseText = responseX12Message.toString();
 				} else {
